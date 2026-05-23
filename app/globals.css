@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Reset & Base ─────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-void: #050508;
+  --color-surface: #0a0a12;
+  --color-surface-alt: #12121e;
+  --color-border: rgba(80, 80, 130, 0.25);
+  --color-text-primary: rgba(220, 220, 255, 0.92);
+  --color-text-secondary: rgba(140, 140, 180, 0.7);
+  --color-accent-purple: #a78bfa;
+  --color-accent-blue: #60a5fa;
+  --color-accent-green: #34d399;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Geist Mono', monospace;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-void);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent text selection during canvas drag */
+.dragging { user-select: none; }
+
+/* ─── Scrollbar (for future panels) ───────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--color-surface); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(120, 120, 180, 0.5); }
