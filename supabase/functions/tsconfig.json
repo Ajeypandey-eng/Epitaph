@@ -1,0 +1,18 @@
+{
+  // This tsconfig is for Supabase Edge Functions (Deno runtime).
+  // It is intentionally separate from the Next.js tsconfig.json at the
+  // project root, which excludes this directory entirely.
+  //
+  // To get Deno intellisense in VS Code:
+  //   1. Install the "Deno" VS Code extension (denoland.vscode-deno)
+  //   2. Add to .vscode/settings.json:
+  //        "deno.enablePaths": ["supabase/functions"]
+  //   3. The extension will use this tsconfig automatically.
+
+  "compilerOptions": {
+    "lib": ["deno.window"],
+    "strict": true,
+    "noImplicitAny": true
+  },
+  "include": ["./**/*.ts"]
+}

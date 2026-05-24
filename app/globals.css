@@ -43,3 +43,171 @@ html, body {
 ::-webkit-scrollbar-track { background: var(--color-surface); }
 ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(120, 120, 180, 0.5); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GLITCH SYSTEM
+   Three layers of corruption, each independent:
+     1. glitch-jitter   — micro-pixel horizontal jitter on the whole card
+     2. glitch-text     — chromatic aberration via red/blue text-shadow shifts
+     3. glitch-slice    — rapid clip-path slice tears on the ::before/::after
+
+   Usage:
+     .glitch-card        — apply to the card wrapper (enables jitter)
+     .glitch-text        — apply to the text node (enables chroma shift)
+     .glitch-slice       — apply to the text node (enables slice tears)
+   The ::before/::after layers are automatically injected by .glitch-slice.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Card-level positional jitter ─────────────────────────────────────── */
+@keyframes glitch-jitter {
+  0%,  100% { transform: translate(-50%, -50%) translate(0px,   0px); }
+  10%        { transform: translate(-50%, -50%) translate(-2px,  1px); }
+  20%        { transform: translate(-50%, -50%) translate( 2px, -1px); }
+  30%        { transform: translate(-50%, -50%) translate(-1px,  2px); }
+  40%        { transform: translate(-50%, -50%) translate( 1px, -2px); }
+  50%        { transform: translate(-50%, -50%) translate(-3px,  0px); }
+  60%        { transform: translate(-50%, -50%) translate( 2px,  1px); }
+  70%        { transform: translate(-50%, -50%) translate(-1px, -1px); }
+  80%        { transform: translate(-50%, -50%) translate( 3px,  2px); }
+  90%        { transform: translate(-50%, -50%) translate(-2px,  0px); }
+}
+
+.glitch-card {
+  animation: glitch-jitter 0.18s steps(1) infinite;
+}
+
+/* ── 2. Chromatic aberration text-shadow shift ────────────────────────────── */
+/*
+   The red channel shifts left, the blue channel shifts right — mimicking
+   an analog CRT or worn VHS signal losing sync.
+   Intensity ramps up depending on severity class.
+*/
+@keyframes glitch-text-chroma {
+  0%,  90%, 100% {
+    text-shadow:
+      -2px 0   0 rgba(255, 30, 60, 0.75),
+       2px 0   0 rgba(30,  80, 255, 0.75);
+  }
+  10% {
+    text-shadow:
+       3px  1px 0 rgba(255, 30, 60, 0.9),
+      -3px -1px 0 rgba(30,  80, 255, 0.9);
+  }
+  25% {
+    text-shadow:
+      -4px  0px 0 rgba(255, 30, 60, 0.6),
+       4px  1px 0 rgba(30,  80, 255, 0.6);
+  }
+  40% {
+    text-shadow:
+       1px -2px 0 rgba(255, 30, 60, 1),
+      -1px  2px 0 rgba(30,  80, 255, 1);
+  }
+  55% {
+    text-shadow:
+      -3px  0px 0 rgba(255, 30, 60, 0.8),
+       3px  0px 0 rgba(30,  80, 255, 0.8);
+  }
+  70% {
+    text-shadow:
+       2px  1px 0 rgba(255, 30, 60, 0.5),
+      -2px -1px 0 rgba(30,  80, 255, 0.5);
+  }
+}
+
+.glitch-text {
+  animation: glitch-text-chroma 0.22s steps(1) infinite;
+  will-change: text-shadow;
+}
+
+/* ── 3. Clip-path slice tears ─────────────────────────────────────────────── */
+/*
+   .glitch-slice wraps a positioned element whose ::before and ::after
+   pseudo-elements are offset color duplicates exposed through different
+   clip-path rectangles — giving the torn-tape slice effect.
+*/
+@keyframes glitch-slice-before {
+  0%,  100% { clip-path: inset(40% 0 50% 0);  transform: translate(-3px, -1px); }
+  10%        { clip-path: inset(15% 0 72% 0);  transform: translate( 3px,  0px); }
+  20%        { clip-path: inset(60% 0 20% 0);  transform: translate(-2px,  2px); }
+  30%        { clip-path: inset(5%  0 88% 0);  transform: translate( 4px, -1px); }
+  40%        { clip-path: inset(75% 0 10% 0);  transform: translate(-3px,  1px); }
+  50%        { clip-path: inset(30% 0 55% 0);  transform: translate( 2px,  0px); }
+  60%        { clip-path: inset(80% 0 5%  0);  transform: translate(-4px, -2px); }
+  70%        { clip-path: inset(20% 0 65% 0);  transform: translate( 3px,  1px); }
+  80%        { clip-path: inset(50% 0 35% 0);  transform: translate(-1px,  0px); }
+  90%        { clip-path: inset(10% 0 80% 0);  transform: translate( 2px, -1px); }
+}
+
+@keyframes glitch-slice-after {
+  0%,  100% { clip-path: inset(55% 0 30% 0);  transform: translate( 3px,  1px); }
+  10%        { clip-path: inset(85% 0 8%  0);  transform: translate(-2px,  0px); }
+  20%        { clip-path: inset(22% 0 68% 0);  transform: translate( 4px, -1px); }
+  30%        { clip-path: inset(65% 0 18% 0);  transform: translate(-3px,  2px); }
+  40%        { clip-path: inset(10% 0 78% 0);  transform: translate( 1px, -2px); }
+  50%        { clip-path: inset(45% 0 40% 0);  transform: translate(-4px,  0px); }
+  60%        { clip-path: inset(70% 0 15% 0);  transform: translate( 2px,  1px); }
+  70%        { clip-path: inset(35% 0 50% 0);  transform: translate(-2px, -1px); }
+  80%        { clip-path: inset(5%  0 85% 0);  transform: translate( 3px,  0px); }
+  90%        { clip-path: inset(58% 0 28% 0);  transform: translate(-1px,  2px); }
+}
+
+.glitch-slice {
+  position: relative;
+}
+
+.glitch-slice::before,
+.glitch-slice::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  background: inherit;
+  /* Font must match the real text exactly */
+  font-family: var(--font-mono);
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  pointer-events: none;
+}
+
+.glitch-slice::before {
+  color: rgba(255, 50, 80, 0.88);
+  animation: glitch-slice-before 0.25s steps(1) infinite;
+}
+
+.glitch-slice::after {
+  color: rgba(40, 90, 255, 0.88);
+  animation: glitch-slice-after 0.31s steps(1) infinite;
+}
+
+/* ── Vitality utility classes ─────────────────────────────────────────────── */
+/* Apply via cn() in ThoughtCard based on vitality threshold */
+
+.vitality-healthy  { opacity: 1; }
+.vitality-decaying { opacity: 0.72; }
+.vitality-critical { opacity: 0.44; }
+
+/* ── Shockwave animation ──────────────────────────────────────────────────── */
+
+@keyframes shockwave {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+    border-color: rgba(6, 182, 212, 1);
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.8), inset 0 0 15px rgba(6, 182, 212, 0.8);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+    border-color: rgba(6, 182, 212, 0);
+    box-shadow: 0 0 50px rgba(6, 182, 212, 0), inset 0 0 50px rgba(6, 182, 212, 0);
+  }
+}
+
+.animate-shockwave {
+  animation: shockwave 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
